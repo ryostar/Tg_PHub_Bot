@@ -58,20 +58,20 @@ async def start(_, message):
 )
 async def help(_, message):
     await message.reply_text(
-        """**Below are My Commands...**
-/help To Show This Message.
-/repo To Get the Repo.
+        """**Dưới đây là các lệnh của tôi...**
+/help : Xem hướng dẫn
+/admin : Xem nhà phát triển
 
 To Search in PHub just simply Type something"""
     )
     
 # Repo  -----------------------------------------------------------------------
 @app.on_message(
-    filters.command("repo") & ~filters.edited
+    filters.command("admin") & ~filters.edited
 )
 async def repo(_, message):
     m= await message.reply_text(
-        text="""[Tg_PHub_Bot Repo](https://github.com/Devanagaraj/Tg_PHub_Bot) | [Support Group](https://t.me/PatheticProgrammers)""",
+        text="""Bot này thuộc quyền sở hữu của [Kuri](https://t.me/cunongdan)""",
         disable_web_page_preview=True
        )
 
@@ -83,26 +83,26 @@ async def sarch(_,message):
     try:
         if "/" in message.text.split(None,1)[0]:
             await message.reply_text(
-                "**Usage:**\nJust type Something to search in PHub Directly"
+                "**Usage:**\nChỉ cần nhập Một cái gì đó để tìm kiếm trong Pornhub Trực tiếp"
             )
             return
     except:
         pass
-    m = await message.reply_text("Getting Results.....")
+    m = await message.reply_text("Nhận kết quả.....")
     search = message.text
     try:
         resp = await pornhub(search,thumbsize="large")
         res = resp.result
     except:
-        await m.edit("Found Nothing... Try again")
+        await m.edit("Không tìm thấy gì ... Hãy thử lại")
         return
     if not resp.ok:
-        await m.edit("Found Nothing... Try again")
+        await m.edit("Không tìm thấy gì ... Hãy thử lại")
         return
     resolt = f"""
-**Title:** {res[0].title}
-**views:** {res[0].views}
-**rating:** {res[0].rating}"""
+**Tên:** {res[0].title}
+**Lượt xem:** {res[0].views}
+**Đánh giá:** {res[0].rating}"""
     await m.delete()
     m = await message.reply_photo(
         photo=res[0].thumbnails[0].src,
@@ -110,13 +110,13 @@ async def sarch(_,message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("Next",
+                    InlineKeyboardButton("Xem video khác",
                                          callback_data="next"),
-                    InlineKeyboardButton("Delete",
+                    InlineKeyboardButton("Xóa",
                                          callback_data="delete"),
                 ],
                 [
-                    InlineKeyboardButton("Download",
+                    InlineKeyboardButton("Tải về",
                                          callback_data="dload")
                 ]
             ]
@@ -133,7 +133,7 @@ async def callback_query_next(_, query):
     try:
         data = db[query.message.chat.id]
     except:
-        await m.edit("Something Wrong ..... **Search Again**")
+        await m.edit("Có lỗi xảy ra ..... **Tìm kiếm lại**")
         return
     res = data['result']
     curr_page = int(data['curr_page'])
@@ -142,35 +142,35 @@ async def callback_query_next(_, query):
     if len(res) <= (cur_page+1):
         cbb = [
                 [
-                    InlineKeyboardButton("Previous",
+                    InlineKeyboardButton("Video trước",
                                          callback_data="previous"),
-                    InlineKeyboardButton("Download",
+                    InlineKeyboardButton("Tải về",
                                          callback_data="dload"),
                 ],
                 [
-                    InlineKeyboardButton("Delete",
+                    InlineKeyboardButton("Xóa",
                                          callback_data="delete"),
                 ]
               ]
     else:
         cbb = [
                 [
-                    InlineKeyboardButton("Previous",
+                    InlineKeyboardButton("Trước",
                                          callback_data="previous"),
-                    InlineKeyboardButton("Next",
+                    InlineKeyboardButton("Sau",
                                          callback_data="next"),
                 ],
                 [
-                    InlineKeyboardButton("Delete",
+                    InlineKeyboardButton("Xóa",
                                          callback_data="delete"),
-                    InlineKeyboardButton("Download",
+                    InlineKeyboardButton("Tải",
                                          callback_data="dload")
                 ]
               ]
     resolt = f"""
-**Title:** {res[cur_page].title}
-**views:** {res[cur_page].views}
-**rating:** {res[cur_page].rating}"""
+**Tên:** {res[cur_page].title}
+**Lượt xem:** {res[cur_page].views}
+**Đánh giá:** {res[cur_page].rating}"""
 
     await m.edit_media(media=InputMediaPhoto(res[cur_page].thumbnails[0].src))
     await m.edit(
@@ -186,7 +186,7 @@ async def callback_query_next(_, query):
     try:
         data = db[query.message.chat.id]
     except:
-        await m.edit("Something Wrong ..... **Search Again**")
+        await m.edit("Xãy ra lỗi ..... **Search Again**")
         return
     res = data['result']
     curr_page = int(data['curr_page'])
@@ -195,35 +195,35 @@ async def callback_query_next(_, query):
     if cur_page != 0:
         cbb=[
                 [
-                    InlineKeyboardButton("Previous",
+                    InlineKeyboardButton("Lùi lại",
                                          callback_data="previous"),
-                    InlineKeyboardButton("Next",
+                    InlineKeyboardButton("Tiếp theo",
                                          callback_data="next"),
                 ],
                 [
-                    InlineKeyboardButton("Delete",
+                    InlineKeyboardButton("Xóa",
                                          callback_data="delete"),
-                    InlineKeyboardButton("Download",
+                    InlineKeyboardButton("Tải",
                                          callback_data="dload")
                 ]
             ]
     else:
         cbb=[
                 [
-                    InlineKeyboardButton("Next",
+                    InlineKeyboardButton("Tiếp",
                                          callback_data="next"),
-                    InlineKeyboardButton("Delete",
+                    InlineKeyboardButton("Xóa",
                                          callback_data="Delete"),
                 ],
                 [
-                    InlineKeyboardButton("Download",
+                    InlineKeyboardButton("Tải",
                                          callback_data="dload")
                 ]
             ]
     resolt = f"""
-**Title:** {res[cur_page].title}
-**views:** {res[cur_page].views}
-**rating:** {res[cur_page].rating}"""
+**Tên:** {res[cur_page].title}
+**Lượt xem:** {res[cur_page].views}
+**Đánh xóa:** {res[cur_page].rating}"""
 
     await m.edit_media(media=InputMediaPhoto(res[cur_page].thumbnails[0].src))
     await m.edit(
@@ -244,16 +244,16 @@ async def callback_query_next(_, query):
     db[m.chat.id]['thumb'] = res[curr_page].thumbnails[0].src
     db[m.chat.id]['dur'] = res[curr_page].duration
     resolt = f"""
-**Title:** {res[curr_page].title}
-**views:** {res[curr_page].views}
-**rating:** {res[curr_page].rating}"""
+**Tên:** {res[curr_page].title}
+**Lượt xem:** {res[curr_page].views}
+**Đánh giá:** {res[curr_page].rating}"""
     pos = 1
     cbb = []
     for resolts in dl_links.result.video:
         b= [InlineKeyboardButton(f"{resolts.quality} - {resolts.size}", callback_data=f"phubdl {pos}")]
         pos += 1
         cbb.append(b)
-    cbb.append([InlineKeyboardButton("Delete", callback_data="delete")])
+    cbb.append([InlineKeyboardButton("Xóa", callback_data="delete")])
     await m.edit(
         resolt,
         reply_markup=InlineKeyboardMarkup(cbb),
@@ -266,7 +266,7 @@ async def callback_query_dl(_, query):
     m = query.message
     capsion = m.caption
     entoty = m.caption_entities
-    await m.edit(f"**Downloading Now :\n\n{capsion}")
+    await m.edit(f"**Tải về :\n\n{capsion}")
     data = db[m.chat.id]
     res = data['result']
     curr_page = int(data['curr_page'])
@@ -278,9 +278,9 @@ async def callback_query_dl(_, query):
         vid = await download_url(res[pos].url)
     except Exception as e:
         print(e)
-        await m.edit("Oops Download Error... Try again")
+        await m.edit("Lỗi tải về")
         return
-    await m.edit(f"**Uploading Now :\n\n'''{capsion}'''")
+    await m.edit(f"**Tải lên bây giờ :\n\n'''{capsion}'''")
     await app.send_chat_action(m.chat.id, "upload_video")
     await m.edit_media(media=InputMediaVideo(vid,thumb=thomb, duration=durr, supports_streaming=True))
     await m.edit_caption(caption=capsion, caption_entities=entoty)
