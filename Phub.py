@@ -49,7 +49,7 @@ async def time_to_seconds(time):
 )
 async def start(_, message):
     m= await message.reply_text(
-        text = "Hi Iam Tg_PHub_Bot.You can Download Videos from PHub upto 1080p !"
+        text = "Tôi có thể giúp bạn tải về video ở PornHub"
        )
 
 # Help-------------------------------------------------------------------------
